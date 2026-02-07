@@ -1,0 +1,441 @@
+/* =========================================
+   1. VARIABLES Y RESETEO
+   ========================================= */
+:root {
+  --bg-color: #f6f8fc;       /* Fondo gris claro */
+  --card-bg: #ffffff;        /* Fondo blanco de cartas */
+  --primary-color: #ff5350;  /* Rojo Pokédex (logo/acento) */
+  --accent-blue: #559ed1;    /* Azul agua/hielo */
+  --text-dark: #2f3133;      /* Texto principal */
+  --text-grey: #9e9e9e;      /* Texto secundario */
+  --shadow-soft: 0 10px 20px rgba(0, 0, 0, 0.05); /* Sombra suave */
+  --radius-card: 20px;       /* Redondeo de las cartas */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+
+/* =========================================
+   2. ESTRUCTURA GENERAL (LAYOUT)
+   ========================================= */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   3. HEADER / NAVBAR
+   ========================================= */
+.navbar {
+  background-color: var(--card-bg);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  margin: 20px 40px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+}
+
+.nav-logo {
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: var(--primary-color);
+  border-radius: 50%;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links span {
+  font-weight: 600;
+  color: var(--text-grey);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.nav-links span:hover, .nav-links span.active {
+  color: var(--text-dark);
+}
+
+/* =========================================
+   4. CONTENEDOR PRINCIPAL (GRID MAESTRO)
+   ========================================= */
+.main-layout {
+  display: flex;
+  flex: 1;
+  gap: 30px;
+  padding: 0 40px 40px 40px;
+  width: 100%;
+}
+
+/* --- PANEL IZQUIERDO (Lista/Catálogo) --- */
+.left-panel {
+  flex: 2.5;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Barra de Búsqueda */
+.search-bar {
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 18px 25px;
+  border-radius: var(--radius-card);
+  border: none;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-soft);
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: #ccc;
+}
+
+/* Filtros */
+.filters-bar {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  background: var(--card-bg);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--text-dark);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Grid de Cartas */
+.pokemon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.pokemon-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.pokemon-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.card-image-placeholder {
+  width: 100px;
+  height: 100px;
+  background-color: #f0f0f0; /* Fondo gris por si la imagen tarda */
+  border-radius: 50%;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* El color de texto e icono se ocultan al cargar la imagen */
+}
+
+.card-info .id-number {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-grey);
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+
+.card-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+}
+
+/* --- BADGES Y COLORES DINÁMICOS --- */
+.type-badge {
+  /* Estilo base */
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  margin-top: 5px;
+  background-color: #eee; /* Color por defecto */
+  color: #666;
+}
+
+/* Colores específicos según el tipo de Pokémon */
+.type-badge.grass { background-color: #defde0; color: #4ca652; }
+.type-badge.fire { background-color: #fddfdf; color: #e63939; }
+.type-badge.water { background-color: #def3fd; color: #268ec9; }
+.type-badge.bug { background-color: #f8d5a3; color: #8c7418; }
+.type-badge.normal { background-color: #f5f5f5; color: #757575; }
+.type-badge.poison { background-color: #f4e3fd; color: #9b3fc9; }
+.type-badge.electric { background-color: #fcf7de; color: #d1b117; }
+.type-badge.ground { background-color: #f4e7da; color: #be8e46; }
+.type-badge.fairy { background-color: #fceaff; color: #d648a1; }
+.type-badge.fighting { background-color: #e6e0d4; color: #c22e28; }
+.type-badge.psychic { background-color: #ffc6d9; color: #f85888; }
+.type-badge.rock { background-color: #d5d5d4; color: #787873; }
+.type-badge.ghost { background-color: #e0e0fd; color: #5c5cad; }
+.type-badge.ice { background-color: #e7f7fd; color: #6dd3f5; }
+.type-badge.dragon { background-color: #97b3e6; color: #2745a5; }
+
+/* --- PANEL DERECHO (Detalle Sticky) --- */
+.right-panel {
+  flex: 1;
+  position: relative;
+}
+
+.detail-card {
+  background: var(--card-bg);
+  border-radius: 30px;
+  padding: 40px 30px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: sticky;
+  top: 20px; 
+  height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.detail-image-large {
+  width: 180px;
+  height: 180px;
+  background-color: #eaeaea;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-name {
+  font-size: 1.8rem;
+  color: var(--text-dark);
+  margin: 10px 0;
+}
+
+.detail-types {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detail-types span {
+  /* Usamos los mismos estilos base para el detalle */
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  /* Nota: Si quieres colorearlos igual, usa la misma lógica de clases */
+  background: #eef5fd;
+  color: var(--accent-blue);
+}
+
+.detail-description {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-grey);
+  margin-bottom: 30px;
+}
+
+/* Stats Row (Height/Weight) */
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.stat-box {
+  background: #f8f8f8;
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Stats Circles */
+.base-stats {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.stat-circle {
+  width: 40px;
+  height: 40px;
+  background: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.stat-circle.blue { background: #e0f1fd; color: #3b82f6; }
+
+
+/* =========================================
+   5. RESPONSIVE / MEDIA QUERIES
+   ========================================= */
+
+/* --- TABLETS / LAPTOPS PEQUEÑAS (máx 1024px) --- */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 20px;
+    margin: 15px 20px;
+  }
+
+  .main-layout {
+    padding: 0 20px 20px 20px;
+    gap: 20px;
+  }
+
+  .pokemon-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .left-panel {
+    flex: 1.5;
+  }
+}
+
+/* --- MÓVILES (máx 768px) --- */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    gap: 15px;
+    margin: 10px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+
+  .main-layout {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .left-panel, .right-panel {
+    width: 100%;
+    flex: auto;
+  }
+
+  .filters-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .filters-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pokemon-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-card {
+    position: static;
+    height: auto;
+    margin-top: 20px;
+  }
+}
+
+/* =========================================
+   6. FOOTER
+   ========================================= */
+.app-footer {
+  background-color: var(--card-bg);
+  padding: 20px 40px;
+  text-align: center;
+  color: var(--text-grey);
+  font-size: 0.85rem;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; 
+}
+
+.footer-links span {
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.footer-links span:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .app-footer {
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .footer-links span {
+    margin: 0 10px;
+  }
+}
